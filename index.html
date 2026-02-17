@@ -124,7 +124,7 @@
     }
     @media (min-width: 980px){
       .grid{
-        grid-template-columns: 0.95fr 1.35fr;
+        grid-template-columns: 0.9fr 1.4fr;
         align-items:start;
       }
     }
@@ -156,11 +156,47 @@
     }
 
     /* Axes panel */
+    .axes-summary{
+      padding: 4px 0;
+    }
+    .axes-summary .chips-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      margin:10px 0 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .axes-summary .chips-row span{ white-space:nowrap; }
+    .axes-summary .brief{
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0 0 14px;
+    }
+    .axes-toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--ink);
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      cursor:pointer;
+      font-family: inherit;
+    }
+    .axes-toggle:hover{ background: var(--chip); }
     .axisblock{
       display:flex;
       flex-direction:column;
       gap:14px;
     }
+    .axes-expandable{ margin-top: 0; }
+    .axes-panel.collapsed .axes-expandable{ display:none; }
+    .axes-panel:not(.collapsed) .axes-summary{ display:none; }
     .axis{
       border:1px solid var(--line);
       background: var(--panel2);
@@ -298,7 +334,7 @@
       padding: 12px 12px 10px;
       transition: border-color .12s ease, background .12s ease;
       cursor:pointer;
-      min-height: 168px;
+      min-height: 100px;
       overflow:hidden;
     }
     .card:hover{
@@ -336,15 +372,15 @@
     .tag.high .dot{ background: var(--bad);}
 
     .card h3{
-      margin:0 0 6px;
+      margin:0 0 4px;
       font-size: 15px;
       letter-spacing:-.01em;
     }
-    .card p{
-      margin:0 0 10px;
+    .card-subtitle{
+      margin:0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
+      font-size: 12.5px;
+      line-height: 1.35;
     }
     .chips{
       display:flex;
@@ -452,6 +488,19 @@
       gap: 8px;
       align-items: center;
     }
+    .axis-values-toggle{
+      margin-left: auto;
+      border: 0;
+      background: none;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+      font-family: inherit;
+      padding: 0;
+    }
+    .axis-values-toggle:hover{ color: var(--ink); }
+    .axis-values-toggle[aria-pressed="true"]{ font-weight: 500; }
 
     /* Plot view */
     .plotwrap{
@@ -491,12 +540,41 @@
       color: var(--muted);
       opacity: .95;
     }
-    .plot .xlabel{ bottom: 10px; left: 14px; right: 14px; display:flex; justify-content:space-between; }
-    .plot .ylabel{ top: 14px; left: 10px; height: calc(100% - 70px); display:flex; flex-direction:column; justify-content:space-between; }
+    .plot .xlabel{ 
+        bottom: 10px; 
+        left: 14px; 
+        right: 14px; 
+        display:flex; 
+        justify-content:space-between; 
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .plot .ylabel{ 
+        top: 14px; 
+        left: 10px; 
+        height: calc(100% - 70px); 
+        display:flex; 
+        flex-direction:column; 
+        justify-content:space-between; 
+        gap: 0.75rem;
+    }
     .plot .ylabel span{
       transform: translateY(-2px);
     }
-
+    .plot .ylabel .axis-line{
+      flex: 1;
+      min-height: 24px;
+      width: 0.75rem;
+      border-right: 1px solid var(--muted);
+      opacity: 0.7;
+    }
+    .plot .xlabel .axis-line{
+      flex: 1;
+      min-width: 24px;
+      height: 0;
+      border-top: 1px solid var(--muted);
+      opacity: 0.7;
+    }
     .node{
       position:absolute;
       transform: translate(-50%, -50%);
@@ -573,12 +651,20 @@
     </header>
 
     <div class="grid">
-      <!-- Left: Axes + risk -->
-      <section class="panel" aria-label="Axes">
+      <!-- Left: Axes + risk (collapsible) -->
+      <section class="panel axes-panel collapsed" aria-label="Axes" id="axesPanel">
         <div class="hd">
-          <h2>Four axes (what changes as you move right)</h2>
+          <h2 id="axesTitle">What changes as you move right</h2>
         </div>
         <div class="bd">
+          <div class="axes-summary">
+            <div class="chips-row">
+              <span>Purpose ↑</span><span>•</span><span>Integration ↑</span><span>•</span><span>Fidelity ↑</span><span>•</span><span>Consequence ↑</span>
+            </div>
+            <p class="brief">Further right on the spectrum, rigor and ownership increase. The axes describe what shifts.</p>
+            <button type="button" class="axes-toggle" id="btnExpandAxes" aria-expanded="false" aria-controls="axesContent">Expand axes</button>
+          </div>
+          <div id="axesContent" class="axes-expandable">
           <div class="axisblock">
             <div class="axis" data-axis="purpose">
               <div class="row">
@@ -629,13 +715,11 @@
             </div>
 
             <div class="risk" id="riskBox">
-              <b>The risk curve</b>
-              <p>
-                As you move right: creative freedom drops, rigor increases, docs/ownership become real.
-                The common failure modes are treating <em>experiments</em> like <em>systems</em>, or treating
-                <em>systems</em> like <em>experiments</em>.
-              </p>
+              <b>Further right = more rigor and ownership.</b>
+              <p>Common failure: treating experiments like systems, or systems like experiments.</p>
             </div>
+          </div>
+          <button type="button" class="axes-toggle" id="btnHideAxes" aria-expanded="false" aria-controls="axesContent" style="margin-top:12px">Hide axes</button>
           </div>
         </div>
       </section>
@@ -673,11 +757,13 @@
               <div class="gridlines"></div>
               <div class="axes">
                 <div class="ylabel">
-                  <span>Low fidelity</span>
                   <span>High fidelity</span>
+                  <div class="axis-line" aria-hidden="true"></div>
+                  <span>Low fidelity</span>
                 </div>
                 <div class="xlabel">
                   <span>Isolated</span>
+                  <div class="axis-line" aria-hidden="true"></div>
                   <span>Integrated</span>
                 </div>
               </div>
@@ -695,9 +781,11 @@
     // Data model:
     // integration & fidelity are used for 2D plot (0..100)
     // consequence, purpose are used for axis markers and labels (0..100)
+    // Canonical verbs per CONTEXT-PURPOSE.md: Think, Feel, Prove, Ship, Multiply
     const LEVELS = [
       {
         id: "L1",
+        verb: "Think",
         name: "Cognitive artefacts (thinking tools)",
         intent: "Clarify thinking",
         consequence: 12,
@@ -721,6 +809,7 @@
       },
       {
         id: "L2",
+        verb: "Feel",
         name: "Experiential prototypes (clarity & fidelity)",
         intent: "Feel it",
         consequence: 35,
@@ -744,6 +833,7 @@
       },
       {
         id: "L3",
+        verb: "Prove",
         name: "Feasibility probes (engineering conversation tools)",
         intent: "Is this real?",
         consequence: 60,
@@ -767,6 +857,7 @@
       },
       {
         id: "L4",
+        verb: "Ship",
         name: "Integrated production extensions",
         intent: "Ship value",
         consequence: 82,
@@ -790,6 +881,7 @@
       },
       {
         id: "L5",
+        verb: "Multiply",
         name: "Organisational leverage (systems, process, enablement)",
         intent: "Create leverage",
         consequence: 92,
@@ -828,6 +920,30 @@
     };
 
     let selectedIndex = 0;
+    let showAxisValues = false;
+
+    function purposeLabel(p) {
+      if (p <= 20) return "Think";
+      if (p <= 40) return "Feel";
+      if (p <= 60) return "Prove";
+      if (p <= 80) return "Ship";
+      return "Multiply";
+    }
+    function integrationLabel(i) {
+      if (i <= 33) return "Isolated";
+      if (i <= 66) return "Some";
+      return "Integrated";
+    }
+    function fidelityLabel(f) {
+      if (f <= 33) return "Low";
+      if (f <= 66) return "Medium";
+      return "High";
+    }
+    function consequenceLabel(riskLabel) {
+      if (riskLabel === "low") return "Low";
+      if (riskLabel === "high") return "High";
+      return "Medium";
+    }
 
     function tagForRisk(riskLabel){
       if (riskLabel === "low") return { cls:"low", label:"Low consequence" };
@@ -856,11 +972,8 @@
               ${risk.label}
             </span>
           </div>
-          <h3>${lvl.name}</h3>
-          <p>${lvl.oneLiner}</p>
-          <div class="chips">
-            ${lvl.outputs.slice(0,4).map(x => `<span class="chip">${x}</span>`).join("")}
-          </div>
+          <h3>${lvl.id} — ${lvl.verb}</h3>
+          <p class="card-subtitle">${lvl.intent}</p>
         `;
         card.addEventListener("click", () => select(i));
         card.addEventListener("keydown", (e) => {
@@ -872,19 +985,17 @@
 
     function renderDetail(targetEl, lvl){
       const risk = tagForRisk(lvl.riskLabel);
+      const metaContent = showAxisValues
+        ? `<span class="pill2">purpose:${lvl.purpose}</span><span class="pill2">integration:${lvl.integration}</span><span class="pill2">fidelity:${lvl.fidelity}</span><span class="pill2">consequence:${lvl.consequence}</span>`
+        : `<span class="pill2">Purpose: ${purposeLabel(lvl.purpose)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
 
       targetEl.innerHTML = `
         <div class="top">
           <div>
-            <h3>${lvl.id} — ${lvl.intent}</h3>
+            <h3>${lvl.id} — ${lvl.verb}</h3>
             <div class="detail-oneliner">${lvl.oneLiner}</div>
           </div>
-          <div class="meta">
-            <span class="pill2">purpose:${lvl.purpose}</span>
-            <span class="pill2">integration:${lvl.integration}</span>
-            <span class="pill2">fidelity:${lvl.fidelity}</span>
-            <span class="pill2">consequence:${lvl.consequence}</span>
-          </div>
+          <div class="meta">${metaContent}</div>
         </div>
 
         <div class="cols">
@@ -908,8 +1019,17 @@
           </span>
           <span class="chip">Best output: ${lvl.outputs[0]}</span>
           <span class="chip">Theme: ${lvl.intent}</span>
+          <button type="button" class="axis-values-toggle" aria-pressed="${showAxisValues}">${showAxisValues ? "Hide axis values" : "Show axis values"}</button>
         </div>
       `;
+      const toggleBtn = targetEl.querySelector(".axis-values-toggle");
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+          showAxisValues = !showAxisValues;
+          renderDetail(detailEl, LEVELS[selectedIndex]);
+          renderDetail(detailEl2, LEVELS[selectedIndex]);
+        });
+      }
     }
 
     function updateAxisMarkers(lvl){
@@ -992,6 +1112,24 @@
         setView(railPressed ? "plot" : "rail");
       }
     });
+
+    // Axes panel expand/collapse
+    const axesPanel = $("#axesPanel");
+    const btnExpandAxes = $("#btnExpandAxes");
+    const btnHideAxes = $("#btnHideAxes");
+    const axesContent = $("#axesContent");
+    if (axesPanel && btnExpandAxes && btnHideAxes) {
+      btnExpandAxes.addEventListener("click", () => {
+        axesPanel.classList.remove("collapsed");
+        btnExpandAxes.setAttribute("aria-expanded", "true");
+        btnHideAxes.setAttribute("aria-expanded", "true");
+      });
+      btnHideAxes.addEventListener("click", () => {
+        axesPanel.classList.add("collapsed");
+        btnExpandAxes.setAttribute("aria-expanded", "false");
+        btnHideAxes.setAttribute("aria-expanded", "false");
+      });
+    }
 
     // Init
     renderCards();
