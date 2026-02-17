@@ -47,7 +47,7 @@
       align-items:flex-end;
       justify-content:space-between;
       gap:14px;
-      margin-bottom:18px;
+      margin-bottom:24px;
     }
     .title{
       display:flex;
@@ -64,7 +64,7 @@
     .sub{
       margin:0;
       color:var(--muted);
-      max-width: 72ch;
+      max-width: 65ch;
       font-size: 14.5px;
       line-height: 1.45;
     }
@@ -109,6 +109,7 @@
       font-size: 13px;
       cursor:pointer;
       transition: .12s ease;
+      line-height: 14px;
     }
     .toggle button[aria-pressed="true"]{
       background: var(--panel);
@@ -124,7 +125,7 @@
     }
     @media (min-width: 980px){
       .grid{
-        grid-template-columns: 0.9fr 1.4fr;
+        grid-template-columns: 1.4fr 0.9fr;
         align-items:start;
       }
     }
@@ -162,13 +163,29 @@
     .axes-summary .chips-row{
       display:flex;
       flex-wrap:wrap;
-      gap:8px;
+      gap:6px;
       align-items:center;
-      margin:10px 0 12px;
-      font-size: 13px;
-      color: var(--muted);
+      margin:0 0 12px;
     }
-    .axes-summary .chips-row span{ white-space:nowrap; }
+    .axes-summary .chips-row span{
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      padding:6px;
+      border-radius:4px;
+      border:1px solid var(--line);
+      background: var(--panel2);
+      font-size:12px;
+      color: var(--ink);
+      font-family: var(--mono);
+      letter-spacing: -0.02em;
+    }
+    .axes-summary .chips-row .arrow-up{
+      flex-shrink:0;
+      margin-left:4px;
+      vertical-align:middle;
+      color: var(--good);
+    }
     .axes-summary .brief{
       font-size: 13px;
       color: var(--muted);
@@ -187,6 +204,7 @@
       border-radius: var(--radius);
       cursor:pointer;
       font-family: inherit;
+      font-weight: 600;
     }
     .axes-toggle:hover{ background: var(--chip); }
     .axisblock{
@@ -239,12 +257,13 @@
       border-radius: 4px;
       background: var(--line);
       overflow:visible;
+      margin: 1rem 0;
     }
     .bar::after{
       content:"";
       position:absolute;
       inset:0;
-      background: var(--chip);
+      background: var(--line);
       border-radius: 4px;
     }
     .marker{
@@ -271,8 +290,8 @@
       margin-top: 4px;
       padding: 12px;
       border-radius: var(--radius);
-      border:1px solid var(--line);
-      background: var(--panel2);
+      border:1px solid var(--chip);
+      background: var(--bg);
     }
     .risk b{
       display:block;
@@ -287,7 +306,12 @@
       line-height:1.45;
     }
 
-    /* Spectrum panel */
+    /* Rail section (above grid; cards drive selection for both views) */
+    .rail-section{
+      margin-bottom: 16px;
+    }
+
+    /* Spectrum / level detail panel */
     .spectrum{
       display:flex;
       flex-direction:column;
@@ -308,6 +332,7 @@
       color: var(--muted);
       font-size: 12px;
       font-family: var(--mono);
+      font-weight: 600;
     }
     .cards{
       display:grid;
@@ -322,7 +347,7 @@
     }
     @media (min-width: 1100px){
       .cards{
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       }
     }
 
@@ -339,13 +364,14 @@
     }
     .card:hover{
       border-color: var(--muted);
-      background: var(--panel2);
+      background: rgba(255, 255, 255, 0.5);
     }
     .card[aria-selected="true"]{
       border-color: var(--ink);
       background: var(--panel2);
       box-shadow: inset 0 0 0 1px var(--ink);
     }
+    
     .lvl{
       display:flex;
       align-items:center;
@@ -364,8 +390,21 @@
       font-size: 12px;
       color: var(--muted);
     }
+    .tag.tag-light {
+        border-color: var(--line);
+        background-color: rgba(var(--panel2), 0.5);
+        background-color: color-mix(in srgb, var(--panel2), white 50%);
+        color: var(--muted);
+    }
+
+    .card[aria-selected="true"] .tag:not(.tag-light){
+        background-color: white;
+    }
     .tag .dot{
-      width:6px;height:6px;border-radius:1px;background: var(--ink);
+      width:8px;
+      height:8px;
+      border-radius:2px;
+      background: var(--ink);
     }
     .tag.low .dot{ background: var(--good);}
     .tag.mid .dot{ background: var(--warn);}
@@ -377,7 +416,7 @@
       letter-spacing:-.01em;
     }
     .card-subtitle{
-      margin:0;
+      margin:0 0 0.5rem 0;
       color: var(--muted);
       font-size: 12.5px;
       line-height: 1.35;
@@ -404,7 +443,7 @@
       background: var(--panel2);
       border-radius: var(--radius);
       padding: 20px;
-      margin-top: 20px;
+      margin-top: 0;
     }
     .detail .top{
       display:flex;
@@ -417,7 +456,7 @@
     }
     .detail .top h3{
       margin:0;
-      font-size: 17px;
+      font-size: 22px;
       letter-spacing:-.02em;
     }
     .detail-oneliner{
@@ -425,11 +464,14 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
+      text-wrap-style: balance;
+      font-size: 14px;
     }
     .detail .meta{
       display:flex;
       gap:8px;
-      flex-wrap:wrap;
+      /* flex-wrap:wrap; */
+      flex-direction: column;;
       justify-content:flex-end;
     }
     .meta .pill2{
@@ -440,6 +482,7 @@
       background: var(--chip);
       padding: 4px 8px;
       border-radius: 4px;
+      min-width: max-content;
     }
     .detail .cols{
       display:grid;
@@ -459,12 +502,32 @@
       padding: 16px;
     }
     .box b{
-      display:block;
-      font-size: 11px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
       letter-spacing:.08em;
       text-transform:uppercase;
       color: var(--muted);
       margin-bottom:10px;
+    }
+    .box-heading-icon{
+      flex-shrink:0;
+      width:14px;
+      height:14px;
+      color: var(--muted);
+    }
+    .box-heading-icon svg{
+      display:block;
+      width:100%;
+      height:100%;
+    }
+
+    .box-heading-icon-examples {
+        color: var(--good);
+    }
+    .box-heading-icon-watchouts {
+        color: var(--bad);
     }
     .list{
       margin:0;
@@ -488,20 +551,6 @@
       gap: 8px;
       align-items: center;
     }
-    .axis-values-toggle{
-      margin-left: auto;
-      border: 0;
-      background: none;
-      color: var(--muted);
-      font-size: 12px;
-      cursor: pointer;
-      text-decoration: underline;
-      font-family: inherit;
-      padding: 0;
-    }
-    .axis-values-toggle:hover{ color: var(--ink); }
-    .axis-values-toggle[aria-pressed="true"]{ font-weight: 500; }
-
     /* Plot view */
     .plotwrap{
       display:none;
@@ -578,7 +627,8 @@
     .node{
       position:absolute;
       transform: translate(-50%, -50%);
-      width: 12px; height: 12px;
+      width: 14px; 
+      height: 14px;
       border-radius: 2px;
       border: 1px solid rgba(0,0,0,.25);
       cursor:pointer;
@@ -603,13 +653,17 @@
       box-shadow: var(--shadow);
     }
     .node:hover::after{ opacity: 1; }
-    .node.sel{ box-shadow: 0 0 0 2px var(--ink); }
+    .node.sel{ 
+        box-shadow: 0 0 0 2px var(--ink); 
+        width: 18px;
+        height: 18px;
+    }
 
     .footerhint{
       margin-top: 10px;
       color: var(--muted);
       font-size: 12.5px;
-      line-height: 1.45;
+      line-height: 1.65;
     }
     .kbd{
       font-family: var(--mono);
@@ -620,6 +674,14 @@
       background: var(--chip);
       color: var(--ink);
     }
+
+    .pill .kbd {
+        font-size: 20px;
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+    }
   </style>
 </head>
 <body>
@@ -628,7 +690,7 @@
       <div class="title">
         <h1>Vibe-coding spectrum</h1>
         <p class="sub">
-          A practical map of what Cursor can be used for — from low-consequence thinking artefacts
+          A practical map of what Cursor can be used for, from low-consequence thinking artefacts
           to production work and organisational leverage.
         </p>
       </div>
@@ -644,14 +706,67 @@
         <div class="pill">
           <strong>Keyboard</strong>
           <div style="display:flex;gap:8px;align-items:center;color:var(--muted);font-family:var(--mono);font-size:12px">
-            <span class="kbd">←</span><span class="kbd">→</span><span>select</span>
+            <span class="kbd">←</span><span class="kbd">→</span><span>to select</span>
           </div>
         </div>
       </div>
     </header>
 
+    <section class="rail-section" aria-label="Consequence gradient">
+      <div class="rail">
+        <div class="railhead">
+          <span>Low consequence / disposable</span>
+          <span>High consequence / durable</span>
+        </div>
+        <div class="cards" id="cards"></div>
+      </div>
+    </section>
+
     <div class="grid">
-      <!-- Left: Axes + risk (collapsible) -->
+      <!-- Main: Level detail / 2D map -->
+      <section class="panel" aria-label="Level detail">
+        <div class="hd">
+          <h2 id="rightTitle">Level detail</h2>
+        </div>
+        <div class="bd">
+          <!-- Rail view (detail only; cards sit above grid) -->
+          <div id="railView" class="spectrum">
+            <div class="detail" id="detail" aria-live="polite">
+              <!-- populated by JS -->
+            </div>
+
+            <div class="footerhint">
+              Tip: Use this to explain “vibe-coding” without the hype. It’s just about choosing
+              the right kind of code artefact for the job. Switch to the <span class="kbd">2D map</span> view in the header to show axes.
+            </div>
+          </div>
+
+          <!-- Plot view -->
+          <div id="plotView" class="plotwrap" aria-label="2D map">
+            <div class="plot">
+              <div class="gridlines"></div>
+              <div class="axes">
+                <div class="ylabel">
+                  <span>High fidelity</span>
+                  <div class="axis-line" aria-hidden="true"></div>
+                  <span>Low fidelity</span>
+                </div>
+                <div class="xlabel">
+                  <span>Isolated</span>
+                  <div class="axis-line" aria-hidden="true"></div>
+                  <span>Integrated</span>
+                </div>
+              </div>
+              <div id="nodes"></div>
+            </div>
+
+            <div class="detail" id="detail2" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- Right: Axes + risk (collapsible) -->
       <section class="panel axes-panel collapsed" aria-label="Axes" id="axesPanel">
         <div class="hd">
           <h2 id="axesTitle">What changes as you move right</h2>
@@ -659,9 +774,28 @@
         <div class="bd">
           <div class="axes-summary">
             <div class="chips-row">
-              <span>Purpose ↑</span><span>•</span><span>Integration ↑</span><span>•</span><span>Fidelity ↑</span><span>•</span><span>Consequence ↑</span>
+              <span>Purpose 
+                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
+                </svg>
+            </span>
+            <span>Integration 
+                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
+                </svg>
+            </span>
+            <span>Fidelity 
+                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
+                </svg>
+            </span>
+            <span>Consequence 
+                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
+                </svg>
+            </span>
             </div>
-            <p class="brief">Further right on the spectrum, rigor and ownership increase. The axes describe what shifts.</p>
+            <p class="brief">As you move further through the spectrum (left to right), rigor and ownership increase.</p>
             <button type="button" class="axes-toggle" id="btnExpandAxes" aria-expanded="false" aria-controls="axesContent">Expand axes</button>
           </div>
           <div id="axesContent" class="axes-expandable">
@@ -724,56 +858,7 @@
         </div>
       </section>
 
-      <!-- Right: Spectrum -->
-      <section class="panel" aria-label="Spectrum">
-        <div class="hd">
-          <h2 id="rightTitle">Spectrum</h2>
-        </div>
-        <div class="bd">
-          <!-- Rail view -->
-          <div id="railView" class="spectrum">
-            <div class="rail" aria-label="Consequence gradient">
-              <div class="railhead">
-                <span>Low consequence / disposable</span>
-                <span>High consequence / durable</span>
-              </div>
-
-              <div class="cards" id="cards"></div>
-            </div>
-
-            <div class="detail" id="detail" aria-live="polite">
-              <!-- populated by JS -->
-            </div>
-
-            <div class="footerhint">
-              Tip: Use this to explain “vibe-coding” without the hype — it’s just choosing
-              the right kind of code artefact for the job. Switch to <span class="kbd">2D map</span> to show axes.
-            </div>
-          </div>
-
-          <!-- Plot view -->
-          <div id="plotView" class="plotwrap" aria-label="2D map">
-            <div class="plot">
-              <div class="gridlines"></div>
-              <div class="axes">
-                <div class="ylabel">
-                  <span>High fidelity</span>
-                  <div class="axis-line" aria-hidden="true"></div>
-                  <span>Low fidelity</span>
-                </div>
-                <div class="xlabel">
-                  <span>Isolated</span>
-                  <div class="axis-line" aria-hidden="true"></div>
-                  <span>Integrated</span>
-                </div>
-              </div>
-              <div id="nodes"></div>
-            </div>
-
-            <div class="detail" id="detail2" aria-live="polite"></div>
-          </div>
-        </div>
-      </section>
+      
     </div>
   </div>
 
@@ -791,13 +876,12 @@
         consequence: 12,
         integration: 10,
         fidelity: 30,
-        purpose: 25,
+        purpose: 19,
         riskLabel: "low",
         oneLiner: "Code as cognitive scaffolding: compress ambiguity, surface trade-offs, expose edge cases.",
         examples: [
           "PRDs + iterative refinement (artefact becomes the shared source of truth)",
           "UI explorations used to reason (not necessarily to ship)",
-          "PolicyChat-style thinking tools",
           "Decision narratives / exec summaries (KV-style communication)"
         ],
         watchouts: [
@@ -920,7 +1004,6 @@
     };
 
     let selectedIndex = 0;
-    let showAxisValues = false;
 
     function purposeLabel(p) {
       if (p <= 20) return "Think";
@@ -967,13 +1050,13 @@
               <span class="dot"></span>
               ${lvl.id}
             </span>
-            <span class="tag ${risk.cls}" title="Consequence level">
+          </div>
+          <h3>${lvl.verb}</h3>
+          <p class="card-subtitle">${lvl.intent}</p>
+          <span class="tag tag-light ${risk.cls}" title="Consequence level">
               <span class="dot"></span>
               ${risk.label}
             </span>
-          </div>
-          <h3>${lvl.id} — ${lvl.verb}</h3>
-          <p class="card-subtitle">${lvl.intent}</p>
         `;
         card.addEventListener("click", () => select(i));
         card.addEventListener("keydown", (e) => {
@@ -985,14 +1068,12 @@
 
     function renderDetail(targetEl, lvl){
       const risk = tagForRisk(lvl.riskLabel);
-      const metaContent = showAxisValues
-        ? `<span class="pill2">purpose:${lvl.purpose}</span><span class="pill2">integration:${lvl.integration}</span><span class="pill2">fidelity:${lvl.fidelity}</span><span class="pill2">consequence:${lvl.consequence}</span>`
-        : `<span class="pill2">Purpose: ${purposeLabel(lvl.purpose)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
+      const metaContent = `<span class="pill2">Purpose: ${purposeLabel(lvl.purpose)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
 
       targetEl.innerHTML = `
         <div class="top">
           <div>
-            <h3>${lvl.id} — ${lvl.verb}</h3>
+            <h3>${lvl.id}: ${lvl.verb}</h3>
             <div class="detail-oneliner">${lvl.oneLiner}</div>
           </div>
           <div class="meta">${metaContent}</div>
@@ -1000,13 +1081,13 @@
 
         <div class="cols">
           <div class="box">
-            <b>Examples</b>
+            <b><span class="box-heading-icon box-heading-icon-examples" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>Examples</b>
             <ul class="list">
               ${lvl.examples.map(x => `<li>${x}</li>`).join("")}
             </ul>
           </div>
           <div class="box">
-            <b>Watch-outs</b>
+            <b><span class="box-heading-icon box-heading-icon-watchouts" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Watch-outs</b>
             <ul class="list">
               ${lvl.watchouts.map(x => `<li>${x}</li>`).join("")}
             </ul>
@@ -1019,17 +1100,8 @@
           </span>
           <span class="chip">Best output: ${lvl.outputs[0]}</span>
           <span class="chip">Theme: ${lvl.intent}</span>
-          <button type="button" class="axis-values-toggle" aria-pressed="${showAxisValues}">${showAxisValues ? "Hide axis values" : "Show axis values"}</button>
         </div>
       `;
-      const toggleBtn = targetEl.querySelector(".axis-values-toggle");
-      if (toggleBtn) {
-        toggleBtn.addEventListener("click", () => {
-          showAxisValues = !showAxisValues;
-          renderDetail(detailEl, LEVELS[selectedIndex]);
-          renderDetail(detailEl2, LEVELS[selectedIndex]);
-        });
-      }
     }
 
     function updateAxisMarkers(lvl){
@@ -1093,7 +1165,7 @@
       btnPlot.setAttribute("aria-pressed", !isRail ? "true" : "false");
       railView.style.display = isRail ? "flex" : "none";
       plotView.classList.toggle("active", !isRail);
-      rightTitle.textContent = isRail ? "Spectrum" : "2D map (integration × fidelity)";
+      rightTitle.textContent = isRail ? "Level detail" : "2D map (integration × fidelity)";
     }
 
     btnRail.addEventListener("click", () => setView("rail"));
