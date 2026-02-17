@@ -718,6 +718,57 @@
         display: grid;
         place-items: center;
     }
+
+    /* Version switcher (evolution of artefact) */
+    .version-switcher{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      border: 1px solid var(--line);
+      opacity: 0.6;
+      transition: opacity 0.25s ease;
+      z-index: 10;
+    }
+    .version-switcher:hover{
+      opacity: 1;
+    }
+    .version-switcher a{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--mono);
+      text-decoration: none;
+      transition: border-color .15s ease, background .15s ease, color .15s ease;
+    }
+    .version-switcher a:hover{
+      border-color: var(--muted);
+      background: var(--chip);
+      color: var(--ink);
+    }
+    .version-switcher a.active{
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--panel);
+    }
+    .version-switcher a.active:hover{
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--panel);
+    }
   </style>
 </head>
 <body>
@@ -747,6 +798,13 @@
         </div>
       </div>
     </header>
+
+    <nav class="version-switcher" aria-label="Artefact version">
+      <a href="index.html" class="version-link active" title="Current version">v4</a>
+      <a href="v3.html" class="version-link" title="Previous version">v3</a>
+      <a href="v2.html" class="version-link" title="Earlier version">v2</a>
+      <a href="v1.html" class="version-link" title="Earliest version">v1</a>
+    </nav>
 
     <section class="rail-section" aria-label="Consequence gradient">
       <div class="rail">
