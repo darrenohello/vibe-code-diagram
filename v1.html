@@ -4,26 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vibe-coding Spectrum (Cursor)</title>
-  <link rel="icon" href="/favicon.png" />
   <style>
     :root{
-      --bg:#f8f7f4;
-      --panel:#fff;
-      --panel2:#f2f0eb;
-      --ink:#1a1a1a;
-      --muted:#505050;
-      --faint:#787878;
-      --line:#d4d2cc;
-      --chip:#e8e6e1;
-      --good:#2d6a4f;
-      --warn:#9a6700;
-      --bad:#b91c1c;
-      --accent:#1a1a1a;
-      --radius:6px;
-      --shadow: 0 1px 2px rgba(0,0,0,.06);
-      --shadow2: 0 1px 1px rgba(0,0,0,.04);
+      --bg:#0b0c10;
+      --panel:#10121a;
+      --panel2:#0f1118;
+      --ink:#e9ecf1;
+      --muted:#aab2c0;
+      --faint:#6b7280;
+      --line:#1f2431;
+      --chip:#171b27;
+      --good:#3ddc97;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --accent:#7aa2ff;
+      --accent2:#b58cff;
+      --radius:18px;
+      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --shadow2: 0 6px 18px rgba(0,0,0,.35);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
 
     *{box-sizing:border-box}
@@ -31,7 +31,11 @@
       margin:0;
       font-family:var(--sans);
       color:var(--ink);
-      background: var(--bg);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(122,162,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 85% 10%, rgba(181,140,255,.16), transparent 60%),
+        radial-gradient(900px 600px at 50% 120%, rgba(61,220,151,.12), transparent 55%),
+        linear-gradient(180deg, #07080c 0%, var(--bg) 100%);
     }
 
     a{color:inherit}
@@ -48,7 +52,7 @@
       align-items:flex-end;
       justify-content:space-between;
       gap:14px;
-      margin-bottom:24px;
+      margin-bottom:18px;
     }
     .title{
       display:flex;
@@ -65,7 +69,7 @@
     .sub{
       margin:0;
       color:var(--muted);
-      max-width: 65ch;
+      max-width: 72ch;
       font-size: 14.5px;
       line-height: 1.45;
     }
@@ -81,9 +85,11 @@
       align-items:center;
       gap:10px;
       border:1px solid var(--line);
-      background: var(--panel);
+      background: rgba(16,18,26,.65);
+      backdrop-filter: blur(10px);
       padding:10px 12px;
-      border-radius: var(--radius);
+      border-radius: 999px;
+      box-shadow: var(--shadow2);
     }
     .pill strong{
       font-size:12px;
@@ -95,27 +101,26 @@
     .toggle{
       display:inline-flex;
       border:1px solid var(--line);
-      background: var(--panel2);
-      padding:2px;
-      border-radius: var(--radius);
-      gap:0;
+      background: rgba(15,17,24,.75);
+      padding:3px;
+      border-radius:999px;
+      gap:3px;
     }
     .toggle button{
       border:0;
-      padding:6px 12px;
-      border-radius: 4px;
+      padding:8px 10px;
+      border-radius:999px;
       background: transparent;
       color: var(--muted);
-      font-weight:500;
+      font-weight:650;
       font-size: 13px;
       cursor:pointer;
-      transition: .12s ease;
-      line-height: 14px;
+      transition: .15s ease;
     }
     .toggle button[aria-pressed="true"]{
-      background: var(--panel);
+      background: rgba(122,162,255,.16);
       color: var(--ink);
-      box-shadow: var(--shadow);
+      box-shadow: inset 0 0 0 1px rgba(122,162,255,.22);
     }
 
     /* Layout */
@@ -126,7 +131,7 @@
     }
     @media (min-width: 980px){
       .grid{
-        grid-template-columns: 1.4fr 0.9fr;
+        grid-template-columns: 0.95fr 1.35fr;
         align-items:start;
       }
     }
@@ -134,7 +139,8 @@
     /* Panels */
     .panel{
       border:1px solid var(--line);
-      background: var(--panel);
+      background: rgba(16,18,26,.7);
+      backdrop-filter: blur(10px);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
@@ -143,8 +149,8 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding:14px 16px 10px;
-      border-bottom:1px solid var(--line);
+      padding:16px 16px 10px;
+      border-bottom:1px solid rgba(31,36,49,.85);
     }
     .panel .hd h2{
       margin:0;
@@ -158,68 +164,15 @@
     }
 
     /* Axes panel */
-    .axes-summary{
-      padding: 4px 0;
-    }
-    .axes-summary .chips-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      align-items:center;
-      margin:0 0 12px;
-    }
-    .axes-summary .chips-row span{
-      white-space:nowrap;
-      display:inline-flex;
-      align-items:center;
-      padding:6px;
-      border-radius:4px;
-      border:1px solid var(--line);
-      background: var(--panel2);
-      font-size:12px;
-      color: var(--ink);
-      font-family: var(--mono);
-      letter-spacing: -0.02em;
-    }
-    .axes-summary .chips-row .arrow-up{
-      flex-shrink:0;
-      margin-left:4px;
-      vertical-align:middle;
-      color: var(--good);
-    }
-    .axes-summary .brief{
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-      margin: 0 0 14px;
-    }
-    .axes-toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--ink);
-      font-size: 13px;
-      padding: 8px 12px;
-      border-radius: var(--radius);
-      cursor:pointer;
-      font-family: inherit;
-      font-weight: 600;
-    }
-    .axes-toggle:hover{ background: var(--chip); }
     .axisblock{
       display:flex;
       flex-direction:column;
       gap:14px;
     }
-    .axes-expandable{ margin-top: 0; }
-    .axes-panel.collapsed .axes-expandable{ display:none; }
-    .axes-panel:not(.collapsed) .axes-summary{ display:none; }
     .axis{
-      border:1px solid var(--line);
-      background: var(--panel2);
-      border-radius: var(--radius);
+      border:1px solid rgba(31,36,49,.8);
+      background: rgba(15,17,24,.55);
+      border-radius: 14px;
       padding:12px;
     }
     .axis .row{
@@ -254,29 +207,30 @@
     }
     .bar{
       position:relative;
-      height:8px;
-      border-radius: 4px;
-      background: var(--line);
-      overflow:visible;
-      margin: 1rem 0;
+      height:10px;
+      border-radius:999px;
+      background: rgba(31,36,49,.85);
+      overflow:hidden;
     }
     .bar::after{
       content:"";
       position:absolute;
       inset:0;
-      background: var(--line);
-      border-radius: 4px;
+      background: linear-gradient(90deg,
+        rgba(61,220,151,.95) 0%,
+        rgba(255,204,102,.95) 55%,
+        rgba(255,107,107,.95) 100%);
+      opacity:.85;
     }
     .marker{
       position:absolute;
       top:50%;
       transform: translate(-50%, -50%);
-      width:12px;
-      height:12px;
-      border-radius: 2px;
+      width:14px;
+      height:14px;
+      border-radius:999px;
       background: var(--ink);
-      border: 1px solid var(--ink);
-      z-index: 1;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.25) inset;
     }
     .legend{
       display:flex;
@@ -290,9 +244,9 @@
     .risk{
       margin-top: 4px;
       padding: 12px;
-      border-radius: var(--radius);
-      border:1px solid var(--chip);
-      background: var(--bg);
+      border-radius: 14px;
+      border:1px dashed rgba(122,162,255,.35);
+      background: rgba(122,162,255,.08);
     }
     .risk b{
       display:block;
@@ -307,24 +261,29 @@
       line-height:1.45;
     }
 
-    /* Rail section (above grid; cards drive selection for both views) */
-    .rail-section{
-      margin-bottom: 16px;
-    }
-
-    /* Spectrum / level detail panel */
+    /* Spectrum panel */
     .spectrum{
       display:flex;
       flex-direction:column;
-      gap:16px;
+      gap:12px;
     }
 
     .rail{
       position:relative;
-      border-radius: var(--radius);
-      border:1px solid var(--line);
-      background: var(--panel2);
+      border-radius: 18px;
+      border:1px solid rgba(31,36,49,.85);
+      background: rgba(15,17,24,.55);
       overflow:hidden;
+    }
+    .rail .grad{
+      position:absolute;
+      inset:0;
+      background: linear-gradient(90deg,
+        rgba(61,220,151,.12) 0%,
+        rgba(61,220,151,.05) 30%,
+        rgba(255,204,102,.06) 60%,
+        rgba(255,107,107,.08) 100%);
+      pointer-events:none;
     }
     .railhead{
       display:flex;
@@ -333,7 +292,6 @@
       color: var(--muted);
       font-size: 12px;
       font-family: var(--mono);
-      font-weight: 600;
     }
     .cards{
       display:grid;
@@ -348,31 +306,31 @@
     }
     @media (min-width: 1100px){
       .cards{
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
       }
     }
 
     .card{
       position:relative;
-      border:1px solid var(--line);
-      background: var(--panel);
-      border-radius: var(--radius);
+      border:1px solid rgba(31,36,49,.85);
+      background: rgba(16,18,26,.65);
+      border-radius: 16px;
       padding: 12px 12px 10px;
-      transition: border-color .12s ease, background .12s ease;
+      box-shadow: var(--shadow2);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
       cursor:pointer;
-      min-height: 100px;
+      min-height: 168px;
       overflow:hidden;
     }
     .card:hover{
-      border-color: var(--muted);
-      background: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      border-color: rgba(122,162,255,.35);
+      background: rgba(18,21,31,.72);
     }
     .card[aria-selected="true"]{
-      border-color: var(--ink);
-      background: var(--panel2);
-      box-shadow: inset 0 0 0 1px var(--ink);
+      border-color: rgba(122,162,255,.55);
+      box-shadow: 0 0 0 1px rgba(122,162,255,.25) inset, var(--shadow);
     }
-    
     .lvl{
       display:flex;
       align-items:center;
@@ -383,44 +341,32 @@
     .tag{
       display:inline-flex;
       align-items:center;
-      gap:6px;
-      padding: 4px 8px;
-      border-radius: 4px;
-      border:1px solid var(--line);
-      background: var(--chip);
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(31,36,49,.9);
+      background: rgba(23,27,39,.75);
       font-size: 12px;
       color: var(--muted);
     }
-    .tag.tag-light {
-        border-color: var(--line);
-        background-color: rgba(var(--panel2), 0.5);
-        background-color: color-mix(in srgb, var(--panel2), white 50%);
-        color: var(--muted);
-    }
-
-    .card[aria-selected="true"] .tag:not(.tag-light){
-        background-color: white;
-    }
     .tag .dot{
-      width:8px;
-      height:8px;
-      border-radius:2px;
-      background: var(--ink);
+      width:8px;height:8px;border-radius:999px;background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(122,162,255,.18);
     }
-    .tag.low .dot{ background: var(--good);}
-    .tag.mid .dot{ background: var(--warn);}
-    .tag.high .dot{ background: var(--bad);}
+    .tag.low .dot{ background: var(--good); box-shadow: 0 0 0 2px rgba(61,220,151,.18);}
+    .tag.mid .dot{ background: var(--warn); box-shadow: 0 0 0 2px rgba(255,204,102,.18);}
+    .tag.high .dot{ background: var(--bad); box-shadow: 0 0 0 2px rgba(255,107,107,.18);}
 
     .card h3{
-      margin:0 0 4px;
+      margin:0 0 6px;
       font-size: 15px;
       letter-spacing:-.01em;
     }
-    .card-subtitle{
-      margin:0 0 0.5rem 0;
+    .card p{
+      margin:0 0 10px;
       color: var(--muted);
-      font-size: 12.5px;
-      line-height: 1.35;
+      font-size: 13px;
+      line-height: 1.45;
     }
     .chips{
       display:flex;
@@ -431,175 +377,95 @@
     .chip{
       font-size: 12px;
       color: var(--muted);
-      border: 1px solid var(--line);
-      background: var(--chip);
-      padding: 4px 8px;
-      border-radius: 4px;
+      border: 1px solid rgba(31,36,49,.85);
+      background: rgba(23,27,39,.55);
+      padding: 5px 8px;
+      border-radius: 999px;
       white-space:nowrap;
     }
 
     /* Detail panel */
     .detail{
-      border:1px solid var(--line);
-      background: var(--panel2);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-top: 0;
+      border:1px solid rgba(31,36,49,.85);
+      background: rgba(15,17,24,.55);
+      border-radius: 16px;
+      padding: 14px;
     }
     .detail .top{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:14px;
-      margin-bottom:18px;
-      padding-bottom:16px;
-      border-bottom:1px solid var(--line);
+      gap:12px;
+      margin-bottom:10px;
     }
     .detail .top h3{
       margin:0;
-      font-size: 22px;
-      letter-spacing:-.02em;
-    }
-    .detail-name{
-      margin: 6px 0 0;
-      color: var(--muted);
       font-size: 16px;
-      line-height: 1.4;
-      font-weight: 500;
-    }
-    .detail-oneliner{
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-      text-wrap-style: balance;
-      font-size: 14px;
     }
     .detail .meta{
       display:flex;
       gap:8px;
-      /* flex-wrap:wrap; */
-      flex-direction: column;;
+      flex-wrap:wrap;
       justify-content:flex-end;
     }
     .meta .pill2{
       font-family: var(--mono);
       font-size: 12px;
       color: var(--muted);
-      border: 1px solid var(--line);
-      background: var(--chip);
-      padding: 4px 8px;
-      border-radius: 4px;
-      min-width: max-content;
+      border: 1px solid rgba(31,36,49,.85);
+      background: rgba(23,27,39,.55);
+      padding: 6px 8px;
+      border-radius: 999px;
     }
     .detail .cols{
       display:grid;
       grid-template-columns: 1fr;
-      gap:16px;
+      gap:12px;
     }
     @media (min-width: 980px){
       .detail .cols{
         grid-template-columns: 1fr 1fr;
-        gap:20px;
       }
     }
     .box{
-      border:1px solid var(--line);
-      background: var(--panel);
-      border-radius: var(--radius);
-      padding: 16px;
+      border:1px solid rgba(31,36,49,.85);
+      background: rgba(16,18,26,.55);
+      border-radius: 14px;
+      padding: 12px;
     }
     .box b{
-      display:flex;
-      align-items:center;
-      gap:8px;
+      display:block;
       font-size: 12px;
-      letter-spacing:.08em;
+      letter-spacing:.06em;
       text-transform:uppercase;
       color: var(--muted);
-      margin-bottom:10px;
-    }
-    .box-heading-icon{
-      flex-shrink:0;
-      width:14px;
-      height:14px;
-      color: var(--muted);
-    }
-    .box-heading-icon svg{
-      display:block;
-      width:100%;
-      height:100%;
-    }
-
-    .box-heading-icon-examples {
-        color: var(--good);
-    }
-    .box-heading-icon-watchouts {
-        color: var(--bad);
+      margin-bottom:8px;
     }
     .list{
       margin:0;
-      padding-left: 20px;
+      padding-left: 18px;
       color: var(--ink);
     }
     .list li{
-      margin: 8px 0;
+      margin: 6px 0;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.45;
       font-size: 13px;
     }
-    .list li:first-child{ margin-top: 0; }
-    .list li:last-child{ margin-bottom: 0; }
-    .detail-footer{
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .detail-info-alert{
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-top: 16px;
-      margin-bottom: 0;
-      padding: 12px 14px;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: var(--panel);
-    }
-    .detail-info-alert__icon{
-      flex-shrink: 0;
-      width: 18px;
-      height: 18px;
-      color: var(--muted);
-    }
-    .detail-info-alert__icon svg{
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    .detail-info-alert p{
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--ink);
-    }
+
     /* Plot view */
     .plotwrap{
       display:none;
-      gap:20px;
+      gap:12px;
     }
     .plotwrap.active{ display:grid; }
 
     .plot{
       position:relative;
-      border-radius: var(--radius);
-      border:1px solid var(--line);
-      background: var(--panel2);
-      /* overflow:hidden; */
+      border-radius: 18px;
+      border:1px solid rgba(31,36,49,.85);
+      background: rgba(15,17,24,.55);
+      overflow:hidden;
       padding: 14px;
       min-height: 420px;
     }
@@ -607,10 +473,10 @@
       position:absolute;
       inset: 0;
       background-image:
-        linear-gradient(to right, var(--line) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+        linear-gradient(to right, rgba(31,36,49,.55) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(31,36,49,.55) 1px, transparent 1px);
       background-size: 80px 80px;
-      opacity: .6;
+      opacity: .55;
       pointer-events:none;
     }
     .plot .axes{
@@ -625,98 +491,56 @@
       color: var(--muted);
       opacity: .95;
     }
-    .plot .xlabel{ 
-        bottom: 10px; 
-        left: 14px; 
-        right: 14px; 
-        display:flex; 
-        justify-content:space-between; 
-        align-items: center;
-        gap: 0.75rem;
-    }
-    .plot .ylabel{ 
-        top: 14px; 
-        left: 10px; 
-        height: calc(100% - 70px); 
-        display:flex; 
-        flex-direction:column; 
-        justify-content:space-between; 
-        gap: 0.75rem;
-    }
+    .plot .xlabel{ bottom: 10px; left: 14px; right: 14px; display:flex; justify-content:space-between; }
+    .plot .ylabel{ top: 14px; left: 10px; height: calc(100% - 70px); display:flex; flex-direction:column; justify-content:space-between; }
     .plot .ylabel span{
       transform: translateY(-2px);
     }
-    .plot .ylabel .axis-line{
-      flex: 1;
-      min-height: 24px;
-      width: 0.75rem;
-      border-right: 1px solid var(--muted);
-      opacity: 0.7;
-    }
-    .plot .xlabel .axis-line{
-      flex: 1;
-      min-width: 24px;
-      height: 0;
-      border-top: 1px solid var(--muted);
-      opacity: 0.7;
-    }
+
     .node{
       position:absolute;
       transform: translate(-50%, -50%);
-      width: 14px; 
-      height: 14px;
-      border-radius: 2px;
-      border: 1px solid rgba(0,0,0,.25);
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.2) inset;
+      border: 1px solid rgba(255,255,255,.22);
       cursor:pointer;
     }
     .node::after{
       content: attr(data-label);
       position:absolute;
-      top: -34px;
+      top: -38px;
       left: 50%;
       transform: translateX(-50%);
       white-space:nowrap;
-      background: var(--panel);
-      border:1px solid var(--line);
-      padding: 4px 8px;
-      border-radius: 4px;
+      background: rgba(16,18,26,.85);
+      border:1px solid rgba(31,36,49,.9);
+      padding: 6px 8px;
+      border-radius: 999px;
       color: var(--muted);
       font-size: 12px;
       font-family: var(--mono);
       opacity: 0;
       pointer-events:none;
       transition: .12s ease;
-      box-shadow: var(--shadow);
     }
     .node:hover::after{ opacity: 1; }
-    .node.sel{ 
-        box-shadow: 0 0 0 2px var(--ink); 
-        width: 18px;
-        height: 18px;
-    }
+    .node.sel{ box-shadow: 0 0 0 1px rgba(122,162,255,.28) inset, 0 0 0 3px rgba(122,162,255,.35); }
 
     .footerhint{
       margin-top: 10px;
       color: var(--muted);
       font-size: 12.5px;
-      line-height: 1.65;
+      line-height: 1.45;
     }
     .kbd{
       font-family: var(--mono);
       font-size: 12px;
       padding: 2px 6px;
-      border-radius: 4px;
-      border:1px solid var(--line);
-      background: var(--chip);
+      border-radius: 8px;
+      border:1px solid rgba(31,36,49,.85);
+      background: rgba(23,27,39,.55);
       color: var(--ink);
-    }
-
-    .pill .kbd {
-        font-size: 20px;
-        width: 32px;
-        height: 32px;
-        display: grid;
-        place-items: center;
     }
   </style>
 </head>
@@ -726,7 +550,7 @@
       <div class="title">
         <h1>Vibe-coding spectrum</h1>
         <p class="sub">
-          A practical map of what Cursor can be used for, from low-consequence thinking artefacts
+          A practical map of what Cursor can be used for — from low-consequence thinking artefacts
           to production work and organisational leverage.
         </p>
       </div>
@@ -742,99 +566,19 @@
         <div class="pill">
           <strong>Keyboard</strong>
           <div style="display:flex;gap:8px;align-items:center;color:var(--muted);font-family:var(--mono);font-size:12px">
-            <span class="kbd">←</span><span class="kbd">→</span><span>to select</span>
+            <span class="kbd">←</span><span class="kbd">→</span><span>select</span>
           </div>
         </div>
       </div>
     </header>
 
-    <section class="rail-section" aria-label="Consequence gradient">
-      <div class="rail">
-        <div class="railhead">
-          <span>Low consequence / disposable</span>
-          <span>High consequence / durable</span>
-        </div>
-        <div class="cards" id="cards"></div>
-      </div>
-    </section>
-
     <div class="grid">
-      <!-- Main: Level detail / 2D map -->
-      <section class="panel" aria-label="Level detail">
+      <!-- Left: Axes + risk -->
+      <section class="panel" aria-label="Axes">
         <div class="hd">
-          <h2 id="rightTitle">Level detail</h2>
+          <h2>Four axes (what changes as you move right)</h2>
         </div>
         <div class="bd">
-          <!-- Rail view (detail only; cards sit above grid) -->
-          <div id="railView" class="spectrum">
-            <div class="detail" id="detail" aria-live="polite">
-              <!-- populated by JS -->
-            </div>
-
-            <div class="footerhint">
-              Tip: Use this to explain “vibe-coding” without the hype. It’s just about choosing
-              the right kind of code artefact for the job. Switch to the <span class="kbd">2D map</span> view in the header to show axes.
-            </div>
-          </div>
-
-          <!-- Plot view -->
-          <div id="plotView" class="plotwrap" aria-label="2D map">
-            <div class="plot">
-              <div class="gridlines"></div>
-              <div class="axes">
-                <div class="ylabel">
-                  <span>High fidelity</span>
-                  <div class="axis-line" aria-hidden="true"></div>
-                  <span>Low fidelity</span>
-                </div>
-                <div class="xlabel">
-                  <span>Isolated</span>
-                  <div class="axis-line" aria-hidden="true"></div>
-                  <span>Integrated</span>
-                </div>
-              </div>
-              <div id="nodes"></div>
-            </div>
-
-            <div class="detail" id="detail2" aria-live="polite"></div>
-          </div>
-        </div>
-      </section>
-
-
-      <!-- Right: Axes + risk (collapsible) -->
-      <section class="panel axes-panel collapsed" aria-label="Axes" id="axesPanel">
-        <div class="hd">
-          <h2 id="axesTitle">What changes as you move right</h2>
-        </div>
-        <div class="bd">
-          <div class="axes-summary">
-            <div class="chips-row">
-              <span>Purpose 
-                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
-                </svg>
-            </span>
-            <span>Integration 
-                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
-                </svg>
-            </span>
-            <span>Fidelity 
-                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
-                </svg>
-            </span>
-            <span>Consequence 
-                <svg class="arrow-up" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M12 19V5m0 0l-7 7m7-7l7 7"/>
-                </svg>
-            </span>
-            </div>
-            <p class="brief">As you move further through the spectrum (left to right), rigor and ownership increase.</p>
-            <button type="button" class="axes-toggle" id="btnExpandAxes" aria-expanded="false" aria-controls="axesContent">Expand axes</button>
-          </div>
-          <div id="axesContent" class="axes-expandable">
           <div class="axisblock">
             <div class="axis" data-axis="purpose">
               <div class="row">
@@ -885,16 +629,66 @@
             </div>
 
             <div class="risk" id="riskBox">
-              <b>Further right = more rigor and ownership.</b>
-              <p>Common failure: treating experiments like systems, or systems like experiments.</p>
+              <b>The risk curve</b>
+              <p>
+                As you move right: creative freedom drops, rigor increases, docs/ownership become real.
+                The common failure modes are treating <em>experiments</em> like <em>systems</em>, or treating
+                <em>systems</em> like <em>experiments</em>.
+              </p>
             </div>
-          </div>
-          <button type="button" class="axes-toggle" id="btnHideAxes" aria-expanded="false" aria-controls="axesContent" style="margin-top:12px">Hide axes</button>
           </div>
         </div>
       </section>
 
-      
+      <!-- Right: Spectrum -->
+      <section class="panel" aria-label="Spectrum">
+        <div class="hd">
+          <h2 id="rightTitle">Spectrum</h2>
+        </div>
+        <div class="bd">
+          <!-- Rail view -->
+          <div id="railView" class="spectrum">
+            <div class="rail" aria-label="Consequence gradient">
+              <div class="grad"></div>
+              <div class="railhead">
+                <span>Low consequence / disposable</span>
+                <span>High consequence / durable</span>
+              </div>
+
+              <div class="cards" id="cards"></div>
+            </div>
+
+            <div class="detail" id="detail" aria-live="polite">
+              <!-- populated by JS -->
+            </div>
+
+            <div class="footerhint">
+              Tip: Use this to explain “vibe-coding” without the hype — it’s just choosing
+              the right kind of code artefact for the job. Switch to <span class="kbd">2D map</span> to show axes.
+            </div>
+          </div>
+
+          <!-- Plot view -->
+          <div id="plotView" class="plotwrap" aria-label="2D map">
+            <div class="plot">
+              <div class="gridlines"></div>
+              <div class="axes">
+                <div class="ylabel">
+                  <span>Low fidelity</span>
+                  <span>High fidelity</span>
+                </div>
+                <div class="xlabel">
+                  <span>Isolated</span>
+                  <span>Integrated</span>
+                </div>
+              </div>
+              <div id="nodes"></div>
+            </div>
+
+            <div class="detail" id="detail2" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -902,22 +696,21 @@
     // Data model:
     // integration & fidelity are used for 2D plot (0..100)
     // consequence, purpose are used for axis markers and labels (0..100)
-    // Canonical verbs per CONTEXT-PURPOSE.md: Think, Feel, Prove, Ship, Multiply
     const LEVELS = [
       {
         id: "L1",
-        verb: "Think",
         name: "Cognitive artefacts (thinking tools)",
         intent: "Clarify thinking",
         consequence: 12,
         integration: 10,
         fidelity: 30,
-        purpose: 19,
+        purpose: 25,
         riskLabel: "low",
         oneLiner: "Code as cognitive scaffolding: compress ambiguity, surface trade-offs, expose edge cases.",
         examples: [
           "PRDs + iterative refinement (artefact becomes the shared source of truth)",
-          "UI explorations used to reason (not necessarily to ship). Think 'lofi mockups' or 'concept UI'.",
+          "UI explorations used to reason (not necessarily to ship)",
+          "PolicyChat-style thinking tools",
           "Decision narratives / exec summaries (KV-style communication)"
         ],
         watchouts: [
@@ -925,13 +718,12 @@
           "Be explicit: disposable artefact, not production commitment",
           "Capture key decisions so it doesn’t vanish into vibes"
         ],
-        outputs: ["PRD or UI ideation", "concept UI", "interactive doc", "executable narrative"]
+        outputs: ["PRD", "concept UI", "interactive doc", "executable narrative"]
       },
       {
         id: "L2",
-        verb: "Feel",
         name: "Experiential prototypes (clarity & fidelity)",
-        intent: "Experience it",
+        intent: "Feel it",
         consequence: 35,
         integration: 20,
         fidelity: 75,
@@ -949,11 +741,10 @@
           "Avoid ‘demo debt’ (prototype becomes a promise)",
           "Document assumptions (latency, edge cases, content rules)"
         ],
-        outputs: ["Interactive prototype", "motion demo", "state model"]
+        outputs: ["interactive prototype", "motion demo", "state model"]
       },
       {
         id: "L3",
-        verb: "Prove",
         name: "Feasibility probes (engineering conversation tools)",
         intent: "Is this real?",
         consequence: 60,
@@ -966,24 +757,22 @@
           "Transcript feature spike pulling from caption files",
           "API/data exploration: “what does the data actually look like?”",
           "QAing a branch on staging with targeted scripts/logging",
-          "‘Should we take this to engineers?’ Proof points"
+          "‘Should we take this to engineers?’ proof points"
         ],
         watchouts: [
-          "Spikes need an explicit exit: what did we learn? What’s next?",
+          "Spikes need an explicit exit: what did we learn? what’s next?",
           "Don’t merge spike-quality code without hardening",
           "Align early with engineers on constraints + ownership"
         ],
-        outputs: ["'Spike' or 'proof of concept'", "working proof", "tech notes", "risk/effort read"],
-        infoAlert: "A spike is a short, exploratory piece of work whose main goal is to learn whether something is feasible and what it really involves, not to ship production code."
+        outputs: ["spike", "working proof", "tech notes", "risk/effort read"]
       },
       {
         id: "L4",
-        verb: "Ship",
         name: "Integrated production extensions",
-        intent: "Ship for real",
+        intent: "Ship value",
         consequence: 82,
-        integration: 90,
-        fidelity: 95,
+        integration: 85,
+        fidelity: 92,
         purpose: 70,
         riskLabel: "high",
         oneLiner: "Cursor as a pair-programmer inside real constraints: maintainability, security, performance, ownership.",
@@ -998,14 +787,12 @@
           "Watch for silent regressions + accessibility gaps",
           "No hero coding: clarify ownership and support paths"
         ],
-        outputs: ["merged PR", "tested feature", "maintained component"],
-        infoAlert: "The intent is to ship for real. This might range from fixing typos, small UI bugs, extending existing features or adding new ones."
+        outputs: ["merged PR", "tested feature", "maintained component"]
       },
       {
         id: "L5",
-        verb: "Multiply",
         name: "Organisational leverage (systems, process, enablement)",
-        intent: "Amplify the organisation",
+        intent: "Create leverage",
         consequence: 92,
         integration: 60,
         fidelity: 55,
@@ -1013,19 +800,17 @@
         riskLabel: "high",
         oneLiner: "The sleeper value: reduce friction and tribal knowledge with tools, docs, and automation.",
         examples: [
-          "Decision narratives / exec summaries (KV-style communication)",
           "Documenting + archiving an email design system",
           "Template generators & guidelines for consistent outputs",
           "Release summaries / internal comms automation",
           "Internal tooling for repeatable workflows"
         ],
         watchouts: [
-          "Avoid ‘tool sprawl’, aim for adoption, not novelty",
-          "Governance: who maintains this?",
+          "Avoid ‘tool sprawl’ — aim for adoption, not novelty",
+          "Design governance: who maintains this?",
           "Make it discoverable: IA, naming, onboarding"
         ],
-        outputs: ["Shared systems or artefacts","docs", "generators", "automation", "shared systems"],
-        infoAlert: "<strong>L5: Multiply</strong> can evolve from <strong>L1: Think</strong> or <strong>L3: Prove</strong> into durable enablement."
+        outputs: ["docs", "generators", "automation", "shared systems"]
       }
     ];
 
@@ -1044,29 +829,6 @@
     };
 
     let selectedIndex = 0;
-
-    function purposeLabel(p) {
-      if (p <= 20) return "Think";
-      if (p <= 40) return "Feel";
-      if (p <= 60) return "Prove";
-      if (p <= 80) return "Ship";
-      return "Multiply";
-    }
-    function integrationLabel(i) {
-      if (i <= 33) return "Isolated";
-      if (i <= 66) return "Some";
-      return "Integrated";
-    }
-    function fidelityLabel(f) {
-      if (f <= 33) return "Low";
-      if (f <= 66) return "Medium";
-      return "High";
-    }
-    function consequenceLabel(riskLabel) {
-      if (riskLabel === "low") return "Low";
-      if (riskLabel === "high") return "High";
-      return "Medium";
-    }
 
     function tagForRisk(riskLabel){
       if (riskLabel === "low") return { cls:"low", label:"Low consequence" };
@@ -1090,13 +852,16 @@
               <span class="dot"></span>
               ${lvl.id}
             </span>
-          </div>
-          <h3>${lvl.verb}</h3>
-          <p class="card-subtitle">${lvl.intent}</p>
-          <span class="tag tag-light ${risk.cls}" title="Consequence level">
+            <span class="tag ${risk.cls}" title="Consequence level">
               <span class="dot"></span>
               ${risk.label}
             </span>
+          </div>
+          <h3>${lvl.name}</h3>
+          <p>${lvl.oneLiner}</p>
+          <div class="chips">
+            ${lvl.outputs.slice(0,4).map(x => `<span class="chip">${x}</span>`).join("")}
+          </div>
         `;
         card.addEventListener("click", () => select(i));
         card.addEventListener("keydown", (e) => {
@@ -1108,36 +873,39 @@
 
     function renderDetail(targetEl, lvl){
       const risk = tagForRisk(lvl.riskLabel);
-      const metaContent = `<span class="pill2">Purpose: ${purposeLabel(lvl.purpose)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
 
       targetEl.innerHTML = `
         <div class="top">
           <div>
-            <h3>${lvl.id}: ${lvl.verb}</h3>
-            <p class="detail-name">${lvl.name}</p>
-            <div class="detail-oneliner">${lvl.oneLiner}</div>
+            <h3>${lvl.id} — ${lvl.intent}</h3>
+            <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45">
+              ${lvl.oneLiner}
+            </div>
           </div>
-          <div class="meta">${metaContent}</div>
+          <div class="meta">
+            <span class="pill2">purpose:${lvl.purpose}</span>
+            <span class="pill2">integration:${lvl.integration}</span>
+            <span class="pill2">fidelity:${lvl.fidelity}</span>
+            <span class="pill2">consequence:${lvl.consequence}</span>
+          </div>
         </div>
 
         <div class="cols">
           <div class="box">
-            <b><span class="box-heading-icon box-heading-icon-examples" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>Examples</b>
+            <b>Examples</b>
             <ul class="list">
               ${lvl.examples.map(x => `<li>${x}</li>`).join("")}
             </ul>
           </div>
           <div class="box">
-            <b><span class="box-heading-icon box-heading-icon-watchouts" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Watch-outs</b>
+            <b>Watch-outs</b>
             <ul class="list">
               ${lvl.watchouts.map(x => `<li>${x}</li>`).join("")}
             </ul>
           </div>
         </div>
 
-        ${lvl.infoAlert ? `<div class="detail-info-alert" role="status"><span class="detail-info-alert__icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span><p>${lvl.infoAlert}</p></div>` : ""}
-
-        <div class="detail-footer">
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
           <span class="tag ${risk.cls}" style="padding:6px 10px">
             <span class="dot"></span>${risk.label}
           </span>
@@ -1176,11 +944,12 @@
         n.dataset.index = i;
         n.dataset.label = lvl.id;
 
-        // Color by consequence (light-mode friendly)
+        // Color by consequence
         const c = lvl.consequence;
-        let bg = "#2d6a4f";
-        if (c > 70) bg = "#b91c1c";
-        else if (c > 40) bg = "#9a6700";
+        // Map consequence to a quick gradient feel (green -> amber -> red)
+        let bg = "rgba(61,220,151,.95)";
+        if (c > 70) bg = "rgba(255,107,107,.95)";
+        else if (c > 40) bg = "rgba(255,204,102,.95)";
         n.style.background = bg;
 
         // Position (padding accounted in CSS: plot has 14px, but nodes are absolute)
@@ -1208,7 +977,7 @@
       btnPlot.setAttribute("aria-pressed", !isRail ? "true" : "false");
       railView.style.display = isRail ? "flex" : "none";
       plotView.classList.toggle("active", !isRail);
-      rightTitle.textContent = isRail ? "Level detail" : "2D map (integration × fidelity)";
+      rightTitle.textContent = isRail ? "Spectrum" : "2D map (integration × fidelity)";
     }
 
     btnRail.addEventListener("click", () => setView("rail"));
@@ -1227,24 +996,6 @@
         setView(railPressed ? "plot" : "rail");
       }
     });
-
-    // Axes panel expand/collapse
-    const axesPanel = $("#axesPanel");
-    const btnExpandAxes = $("#btnExpandAxes");
-    const btnHideAxes = $("#btnHideAxes");
-    const axesContent = $("#axesContent");
-    if (axesPanel && btnExpandAxes && btnHideAxes) {
-      btnExpandAxes.addEventListener("click", () => {
-        axesPanel.classList.remove("collapsed");
-        btnExpandAxes.setAttribute("aria-expanded", "true");
-        btnHideAxes.setAttribute("aria-expanded", "true");
-      });
-      btnHideAxes.addEventListener("click", () => {
-        axesPanel.classList.add("collapsed");
-        btnExpandAxes.setAttribute("aria-expanded", "false");
-        btnHideAxes.setAttribute("aria-expanded", "false");
-      });
-    }
 
     // Init
     renderCards();
