@@ -584,6 +584,58 @@
         gap:20px;
       }
     }
+
+    .complexity-tiers{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 0 0 18px;
+      padding-top: 4px;
+    }
+    @media (min-width: 980px){
+      .complexity-tiers{
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+      }
+    }
+    .complexity-tier{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .complexity-tier--low{
+      border-left: 3px solid var(--good);
+    }
+    .complexity-tier--med{
+      border-left: 3px solid var(--warn);
+    }
+    .complexity-tier--high{
+      border-left: 3px solid var(--bad);
+    }
+    .complexity-label{
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .complexity-desc{
+      margin: 0;
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .complexity-meta{
+      display: block;
+      font-size: 12px;
+      color: var(--faint);
+      line-height: 1.45;
+    }
+
     .box{
       border:1px solid var(--line);
       background: var(--panel);
@@ -1157,7 +1209,27 @@
         fidelity: 95,
         purpose: 70,
         riskLabel: "high",
-        oneLiner: "Cursor as a pair-programmer inside real constraints: maintainability, security, performance, ownership.",
+        oneLiner: "Actual code shipped to production. The scope ranges from trivial fixes to full features — and the governance should match.",
+        complexityTiers: [
+          {
+            label: "Low",
+            description: "Typos, copy updates, removing tooltips, small config changes",
+            who: "PMs, designers, anyone with repo access",
+            review: "Lightweight — PR review, minimal testing"
+          },
+          {
+            label: "Med",
+            description: "Extending features, UI polish, component refactors, adding small capabilities",
+            who: "Product designers, engineers",
+            review: "Standard — PR review, QA, regression check"
+          },
+          {
+            label: "High",
+            description: "Implementing new features or full products, architectural changes",
+            who: "Engineers, with product input",
+            review: "Full — design review, engineering review, QA, accessibility, deployment plan"
+          }
+        ],
         examples: [
           "Feature shipped from a Cursor-assisted build",
           "Working in the codebase with engineers refining/refactoring",
@@ -1170,7 +1242,7 @@
           "No hero coding: clarify ownership and support paths"
         ],
         outputs: ["merged PR", "tested feature", "maintained component"],
-        infoAlert: "The intent is to ship for real. This might range from fixing typos, small UI bugs, extending existing features or adding new ones."
+        infoAlert: "Not all shipping is equal. A typo fix and a new feature are both 'Ship', but they need very different levels of review and collaboration. Most product team shipping is Low or Med."
       },
       {
         id: "L6",
@@ -1246,6 +1318,12 @@
       return { cls:"mid", label:"Medium consequence" };
     }
 
+    function complexityTierModifier(label){
+      if (label === "Low") return "low";
+      if (label === "Med") return "med";
+      return "high";
+    }
+
     const RAIL_GROUPS = [
       { label: "Discovery", start: 0, count: 3 },
       { label: "Delivery", start: 3, count: 2 },
@@ -1310,6 +1388,20 @@
       const risk = tagForRisk(lvl.riskLabel);
       const metaContent = `<span class="pill2">Purpose: ${purposeLabel(lvl.purpose)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
 
+      const complexityBlock = lvl.complexityTiers
+        ? `<div class="complexity-tiers" role="region" aria-label="Ship complexity sub-tiers">
+            ${lvl.complexityTiers.map((tier) => {
+              const mod = complexityTierModifier(tier.label);
+              return `<div class="complexity-tier complexity-tier--${mod}">
+                <span class="complexity-label">${tier.label}</span>
+                <p class="complexity-desc">${tier.description}</p>
+                <span class="complexity-meta">Typical: ${tier.who}</span>
+                <span class="complexity-meta">Review: ${tier.review}</span>
+              </div>`;
+            }).join("")}
+          </div>`
+        : "";
+
       targetEl.innerHTML = `
         <div class="top">
           <div>
@@ -1319,6 +1411,8 @@
           </div>
           <div class="meta">${metaContent}</div>
         </div>
+
+        ${complexityBlock}
 
         <div class="cols">
           <div class="box">
