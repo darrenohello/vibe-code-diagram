@@ -277,6 +277,7 @@
       background: var(--ink);
       border: 1px solid var(--ink);
       z-index: 1;
+      transition: left 0.3s ease;
     }
     .legend{
       display:flex;
@@ -585,36 +586,40 @@
       }
     }
 
+    /* Complexity sub-tiers (Ship only) — interactive */
     .complexity-tiers{
       display: grid;
       grid-template-columns: 1fr;
-      gap: 12px;
-      margin: 0 0 18px;
-      padding-top: 4px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
     @media (min-width: 980px){
       .complexity-tiers{
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 14px;
       }
     }
     .complexity-tier{
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--line);
+      background: var(--panel);
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
     }
-    .complexity-tier--low{
-      border-left: 3px solid var(--good);
+    .complexity-tier:hover{
+      border-color: var(--muted);
+      background: rgba(255, 255, 255, 0.7);
     }
-    .complexity-tier--med{
-      border-left: 3px solid var(--warn);
-    }
-    .complexity-tier--high{
-      border-left: 3px solid var(--bad);
+    .complexity-tier.active{
+      border-color: var(--ink);
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px var(--ink);
     }
     .complexity-label{
       font-size: 13px;
@@ -629,11 +634,20 @@
       color: var(--ink);
       line-height: 1.5;
     }
+    .complexity-meta-group{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 2px;
+    }
     .complexity-meta{
-      display: block;
       font-size: 12px;
       color: var(--faint);
-      line-height: 1.45;
+      line-height: 1.4;
+    }
+    .complexity-meta-label{
+      font-weight: 600;
+      color: var(--muted);
     }
 
     .box{
@@ -801,6 +815,7 @@
       border-radius: 2px;
       border: 1px solid rgba(0,0,0,.25);
       cursor:pointer;
+      transition: left 0.3s ease, top 0.3s ease, background 0.3s ease;
     }
     .node::after{
       content: attr(data-label);
@@ -1000,7 +1015,7 @@
 
 
       <!-- Right: Axes + risk (collapsible) -->
-      <section class="panel axes-panel collapsed" aria-label="Axes" id="axesPanel">
+      <section class="panel axes-panel" aria-label="Axes" id="axesPanel">
         <div class="hd">
           <h2 id="axesTitle">What changes as you move right</h2>
         </div>
@@ -1029,7 +1044,7 @@
             </span>
             </div>
             <p class="brief">As you move further through the spectrum (left to right), rigor and ownership increase.</p>
-            <button type="button" class="axes-toggle" id="btnExpandAxes" aria-expanded="false" aria-controls="axesContent">Expand axes</button>
+            <button type="button" class="axes-toggle" id="btnExpandAxes" aria-expanded="true" aria-controls="axesContent">Expand axes</button>
           </div>
           <div id="axesContent" class="axes-expandable">
           <div class="axisblock">
@@ -1086,7 +1101,7 @@
               <p>Common failure: treating experiments like systems, or systems like experiments.</p>
             </div>
           </div>
-          <button type="button" class="axes-toggle" id="btnHideAxes" aria-expanded="false" aria-controls="axesContent" style="margin-top:12px">Hide axes</button>
+          <button type="button" class="axes-toggle" id="btnHideAxes" aria-expanded="true" aria-controls="axesContent" style="margin-top:12px">Hide axes</button>
           </div>
         </div>
       </section>
@@ -1204,32 +1219,48 @@
         verb: "Ship",
         name: "Integrated production extensions",
         intent: "Ship for real",
-        consequence: 82,
-        integration: 90,
-        fidelity: 95,
-        purpose: 70,
-        riskLabel: "high",
-        oneLiner: "Actual code shipped to production. The scope ranges from trivial fixes to full features — and the governance should match.",
-        complexityTiers: [
-          {
+        consequence: 25,
+        integration: 70,
+        fidelity: 80,
+        purpose: 65,
+        riskLabel: "low",
+        activeComplexity: "low",
+        complexityTiers: {
+          low: {
             label: "Low",
             description: "Typos, copy updates, removing tooltips, small config changes",
             who: "PMs, designers, anyone with repo access",
-            review: "Lightweight — PR review, minimal testing"
+            review: "Lightweight — PR review, minimal testing",
+            consequence: 25,
+            integration: 70,
+            fidelity: 80,
+            purpose: 65,
+            riskLabel: "low"
           },
-          {
+          med: {
             label: "Med",
             description: "Extending features, UI polish, component refactors, adding small capabilities",
             who: "Product designers, engineers",
-            review: "Standard — PR review, QA, regression check"
+            review: "Standard — PR review, QA, regression check",
+            consequence: 65,
+            integration: 85,
+            fidelity: 90,
+            purpose: 75,
+            riskLabel: "mid"
           },
-          {
+          high: {
             label: "High",
             description: "Implementing new features or full products, architectural changes",
             who: "Engineers, with product input",
-            review: "Full — design review, engineering review, QA, accessibility, deployment plan"
+            review: "Full — design review, engineering review, QA, accessibility, deployment plan",
+            consequence: 92,
+            integration: 95,
+            fidelity: 95,
+            purpose: 88,
+            riskLabel: "high"
           }
-        ],
+        },
+        oneLiner: "Actual code shipped to production. The scope ranges from trivial fixes to full features — and the governance should match.",
         examples: [
           "Feature shipped from a Cursor-assisted build",
           "Working in the codebase with engineers refining/refactoring",
@@ -1242,7 +1273,7 @@
           "No hero coding: clarify ownership and support paths"
         ],
         outputs: ["merged PR", "tested feature", "maintained component"],
-        infoAlert: "Not all shipping is equal. A typo fix and a new feature are both 'Ship', but they need very different levels of review and collaboration. Most product team shipping is Low or Med."
+        infoAlert: "Not all shipping is equal. A typo fix and a new feature are both <strong>Ship</strong>, but they need very different levels of review and collaboration. Most product team shipping is <strong>Low</strong> or <strong>Med</strong>."
       },
       {
         id: "L6",
@@ -1296,6 +1327,11 @@
       if (p <= 83) return "Ship";
       return "Multiply";
     }
+    /** Purpose chip in detail meta: Ship always reads "Ship" so tier sliders don’t show Spec/Multiply. */
+    function purposeMetaLabel(lvl) {
+      if (lvl.verb === "Ship") return "Ship";
+      return purposeLabel(lvl.purpose);
+    }
     function integrationLabel(i) {
       if (i <= 33) return "Isolated";
       if (i <= 66) return "Some";
@@ -1318,10 +1354,8 @@
       return { cls:"mid", label:"Medium consequence" };
     }
 
-    function complexityTierModifier(label){
-      if (label === "Low") return "low";
-      if (label === "Med") return "med";
-      return "high";
+    function isInteractiveComplexityTiers(ct){
+      return ct && typeof ct === "object" && !Array.isArray(ct);
     }
 
     const RAIL_GROUPS = [
@@ -1386,18 +1420,27 @@
 
     function renderDetail(targetEl, lvl){
       const risk = tagForRisk(lvl.riskLabel);
-      const metaContent = `<span class="pill2">Purpose: ${purposeLabel(lvl.purpose)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
+      const metaContent = `<span class="pill2">Purpose: ${purposeMetaLabel(lvl)}</span><span class="pill2">Integration: ${integrationLabel(lvl.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(lvl.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(lvl.riskLabel)}</span>`;
 
-      const complexityBlock = lvl.complexityTiers
-        ? `<div class="complexity-tiers" role="region" aria-label="Ship complexity sub-tiers">
-            ${lvl.complexityTiers.map((tier) => {
-              const mod = complexityTierModifier(tier.label);
-              return `<div class="complexity-tier complexity-tier--${mod}">
-                <span class="complexity-label">${tier.label}</span>
-                <p class="complexity-desc">${tier.description}</p>
-                <span class="complexity-meta">Typical: ${tier.who}</span>
-                <span class="complexity-meta">Review: ${tier.review}</span>
-              </div>`;
+      const activeKey = lvl.activeComplexity || "low";
+      const complexityBlock = isInteractiveComplexityTiers(lvl.complexityTiers)
+        ? `<div class="complexity-tiers" role="radiogroup" aria-label="Shipping complexity">
+            ${Object.entries(lvl.complexityTiers).map(([key, tier]) => {
+              const isActive = activeKey === key;
+              const borderColor = key === "low" ? "var(--good)" : key === "med" ? "var(--warn)" : "var(--bad)";
+              return `
+        <button type="button" class="complexity-tier${isActive ? " active" : ""}"
+                data-complexity="${key}"
+                role="radio"
+                aria-checked="${isActive ? "true" : "false"}"
+                style="border-left-color: ${borderColor}">
+          <span class="complexity-label">${tier.label}</span>
+          <p class="complexity-desc">${tier.description}</p>
+          <div class="complexity-meta-group">
+            <span class="complexity-meta"><span class="complexity-meta-label">Typical:</span> ${tier.who}</span>
+            <span class="complexity-meta"><span class="complexity-meta-label">Review:</span> ${tier.review}</span>
+          </div>
+        </button>`;
             }).join("")}
           </div>`
         : "";
@@ -1439,6 +1482,70 @@
           <span class="chip">Theme: ${lvl.intent}</span>
         </div>
       `;
+
+      if (isInteractiveComplexityTiers(lvl.complexityTiers)) {
+        targetEl.querySelectorAll(".complexity-tier").forEach((btn) => {
+          btn.addEventListener("click", () => setComplexity(btn.dataset.complexity));
+        });
+      }
+    }
+
+    function setComplexity(tierKey){
+      const lvl = LEVELS[selectedIndex];
+      if (!isInteractiveComplexityTiers(lvl.complexityTiers)) return;
+
+      let tier = lvl.complexityTiers[tierKey];
+      if (!tier) {
+        tierKey = "low";
+        tier = lvl.complexityTiers.low;
+      }
+      if (!tier) return;
+
+      lvl.activeComplexity = tierKey;
+      lvl.consequence = tier.consequence;
+      lvl.integration = tier.integration;
+      lvl.fidelity = tier.fidelity;
+      lvl.purpose = tier.purpose;
+      lvl.riskLabel = tier.riskLabel;
+
+      updateAxisMarkers(lvl);
+
+      document.querySelectorAll(".complexity-tier").forEach((btn) => {
+        const isActive = btn.dataset.complexity === tierKey;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-checked", isActive ? "true" : "false");
+      });
+
+      const metaHtml = `<span class="pill2">Purpose: ${purposeMetaLabel(lvl)}</span><span class="pill2">Integration: ${integrationLabel(tier.integration)}</span><span class="pill2">Fidelity: ${fidelityLabel(tier.fidelity)}</span><span class="pill2">Consequence: ${consequenceLabel(tier.riskLabel)}</span>`;
+      document.querySelectorAll(".detail .meta").forEach((metaEl) => {
+        metaEl.innerHTML = metaHtml;
+      });
+
+      const risk = tagForRisk(tier.riskLabel);
+      document.querySelectorAll(".detail .detail-footer .tag").forEach((tagEl) => {
+        tagEl.className = `tag ${risk.cls}`;
+        tagEl.style.padding = "6px 10px";
+        tagEl.innerHTML = `<span class="dot"></span>${risk.label}`;
+      });
+
+      const railCard = cardsEl.querySelector(`.card[data-index="${selectedIndex}"]`);
+      if (railCard) {
+        const idTag = railCard.querySelector(".lvl .tag");
+        if (idTag) {
+          idTag.className = `tag ${risk.cls}`;
+          idTag.innerHTML = `<span class="dot"></span>${lvl.id}`;
+        }
+      }
+
+      const plotNode = nodesEl.children[selectedIndex];
+      if (plotNode) {
+        let bg = "#2d6a4f";
+        if (tier.consequence > 70) bg = "#b91c1c";
+        else if (tier.consequence > 40) bg = "#9a6700";
+        plotNode.style.background = bg;
+        plotNode.style.left = `calc(${tier.integration}% )`;
+        plotNode.style.top = `calc(${100 - tier.fidelity}% )`;
+      }
     }
 
     function updateAxisMarkers(lvl){
@@ -1460,6 +1567,9 @@
       renderDetail(detailEl, lvl);
       renderDetail(detailEl2, lvl);
       updateAxisMarkers(lvl);
+      if (isInteractiveComplexityTiers(lvl.complexityTiers)) {
+        setComplexity(lvl.activeComplexity || "low");
+      }
       // Update nodes selection
       [...nodesEl.querySelectorAll(".node")].forEach((n, idx) => n.classList.toggle("sel", idx === selectedIndex));
     }
@@ -1517,8 +1627,16 @@
       const t = e.target;
       if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
 
-      if (e.key === "ArrowRight") { e.preventDefault(); select(selectedIndex + 1); }
-      if (e.key === "ArrowLeft")  { e.preventDefault(); select(selectedIndex - 1); }
+      if (e.key === "ArrowRight") {
+        if (t && t.closest && t.closest(".complexity-tiers")) return;
+        e.preventDefault();
+        select(selectedIndex + 1);
+      }
+      if (e.key === "ArrowLeft") {
+        if (t && t.closest && t.closest(".complexity-tiers")) return;
+        e.preventDefault();
+        select(selectedIndex - 1);
+      }
       if (e.key.toLowerCase() === "m") { // quick toggle view
         const railPressed = btnRail.getAttribute("aria-pressed") === "true";
         setView(railPressed ? "plot" : "rail");
